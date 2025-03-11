@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [output, setOutput] = useState("");
+  const [output, setOutput] = useState<string | Record<string, unknown>>("");
   const [answerIsCached, setAnswerIsCached] = useState(false);
   const [neuronPath, setNeuronPath] = useState("");
   const [bypassCache, setBypassCache] = useState(false);
+  const [isExecutionStopped, setIsExecutionStopped] = useState(false);
 
   useEffect(() => {
     const savedNeuronPath = localStorage.getItem("neuronPath");
@@ -39,6 +40,7 @@ export default function Home() {
       const data = await response.json();
       setOutput(data.output);
       setAnswerIsCached(data.fromCache ?? false);
+      setIsExecutionStopped(data.executionStopped ?? false);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred";
@@ -100,13 +102,19 @@ export default function Home() {
           )}
           {output ? (
             <pre className="font-mono whitespace-pre-wrap text-gray-800 dark:text-gray-200">
-              {output}
+              {typeof output === "string"
+                ? output
+                : JSON.stringify(output, null, 2)}
             </pre>
           ) : (
             <>
               {isLoading ? (
                 <p className="font-mono animate-pulse text-gray-800 dark:text-gray-200">
                   Loading...
+                </p>
+              ) : isExecutionStopped ? (
+                <p className="font-mono text-gray-800 dark:text-gray-200">
+                  Execution stopped after running the prompt.
                 </p>
               ) : (
                 <p className="font-mono text-gray-800 dark:text-gray-200">
