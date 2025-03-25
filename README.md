@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prompteus Sandbox
+
+A lightweight web application for testing and interacting with Prompteus Neurons. This Sandbox provides a simple interface for making API calls to any Neuron endpoint.
+
+## Features
+
+- **Interactive Testing**: Enter your Neuron path and input, then see the results in real-time
+- **Authentication Support**: Securely provide API keys or JWT tokens for protected Neurons
+- **Client-Side Processing**: All API calls are processed directly in your browser
+- **Cache Control**: Easily bypass cache for testing with fresh responses
+- **Open Source**: The entire application is available on GitHub
 
 ## Getting Started
 
@@ -16,21 +26,22 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Using the Sandbox
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Neuron Path**: Enter your Neuron's path in the format `organization/neuron-slug`
+2. **Authentication** (Optional): If your Neuron requires authentication, enter your API key or JWT token
+3. **Input**: Type your input in the text area
+4. **Cache Control**: Toggle the "Bypass Cache" option if you need fresh responses
+5. **Run**: Click the "Run" button to execute the Neuron and see the results
+
+The Sandbox respects all Neuron security settings. If a Neuron requires authentication, you'll need to provide valid credentials to access it.
+
+## Contributing
+
+The Sandbox is open source and available on [GitHub](https://github.com/prompteus-ai/sandbox). We welcome contributions from the community, whether it's bug fixes, feature improvements, or documentation updates.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To learn more about Prompteus and its features, visit:
+- [Prompteus Documentation](https://docs.prompteus.com)
+- [Prompteus Sandbox Documentation](https://docs.prompteus.com/features/sandbox)
