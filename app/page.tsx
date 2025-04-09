@@ -61,29 +61,38 @@ function SandboxContent() {
       // Split the neuron path into org and neuron slugs
       const [orgSlug, neuronSlug] = neuronPath.split("/");
       if (!orgSlug || !neuronSlug) {
-        throw new Error("Invalid neuron path. Use format: organization/neuron-slug");
+        throw new Error(
+          "Invalid neuron path. Use format: organization/neuron-slug"
+        );
       }
 
       const client = new Prompteus({
-        jwtOrApiKey: authToken || undefined
+        jwtOrApiKey: authToken || undefined,
+        baseURL: process.env.NEXT_PUBLIC_CLIENT_BASE_URL,
       });
 
       const result = await client.callNeuron(orgSlug, neuronSlug, {
         input,
         bypassCache,
-        rawOutput: false
+        rawOutput: false,
       });
 
       setOutput(result.output || "");
       setAnswerIsCached(result.fromCache ?? false);
       setIsExecutionStopped(result.executionStopped ?? false);
     } catch (error: unknown) {
-      if (error && typeof error === 'object' && 'statusCode' in error && 'error' in error) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "statusCode" in error &&
+        "error" in error
+      ) {
         const neuronError = error as NeuronErrorResponse;
         const errorMessage = `API Error ${neuronError.statusCode}: ${neuronError.error}`;
         setOutput(`Error: ${errorMessage}`);
       } else {
-        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
         setOutput(`Error: ${errorMessage}`);
       }
     } finally {
@@ -116,7 +125,8 @@ function SandboxContent() {
               onChange={(e) => setAuthToken(e.target.value)}
             />
             <p className="text-xs text-gray-600 dark:text-gray-400 ml-2 leading-tight min-w-80">
-              Note: Credentials are required for private neurons. <br/>The sandbox respects all neuron security settings.
+              Note: Credentials are required for private neurons. <br />
+              The sandbox respects all neuron security settings.
             </p>
           </div>
         </div>
@@ -185,22 +195,24 @@ function SandboxContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={
-      <div className="grid grid-cols-2 h-screen w-screen gap-2 bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
-        <div className="col-span-1 p-4 flex flex-col">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-            <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+    <Suspense
+      fallback={
+        <div className="grid grid-cols-2 h-screen w-screen gap-2 bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+          <div className="col-span-1 p-4 flex flex-col">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+              <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            </div>
+          </div>
+          <div className="col-span-1 p-4">
+            <div className="animate-pulse">
+              <div className="h-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+            </div>
           </div>
         </div>
-        <div className="col-span-1 p-4">
-          <div className="animate-pulse">
-            <div className="h-full bg-gray-200 dark:bg-gray-700 rounded"></div>
-          </div>
-        </div>
-      </div>
-    }>
+      }
+    >
       <SandboxContent />
     </Suspense>
   );
