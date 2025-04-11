@@ -28,11 +28,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Using the Sandbox
 
-1. **Neuron Path**: Enter your Neuron's path in the format `organization/neuron-slug`
+1. **Neuron Path**: Enter your Neuron's path in the format `organization/neuron-slug/revisionId`
 2. **Authentication** (Optional): If your Neuron requires authentication, enter your API key or JWT token
-3. **Input**: Type your input in the text area
-4. **Cache Control**: Toggle the "Bypass Cache" option if you need fresh responses
-5. **Run**: Click the "Run" button to execute the Neuron and see the results
+3. **Key** (Optional): Key is required when running a specific neuron revision, to prevent public access to unpublished versions.
+4. **Input**: Type your input in the text area
+5. **Cache Control**: Toggle the "Bypass Cache" option if you need fresh responses
+6. **Run**: Click the "Run" button to execute the Neuron and see the results
 
 The Sandbox respects all Neuron security settings. If a Neuron requires authentication, you'll need to provide valid credentials to access it.
 
@@ -43,5 +44,6 @@ The Sandbox is open source and available on [GitHub](https://github.com/prompteu
 ## Learn More
 
 To learn more about Prompteus and its features, visit:
+
 - [Prompteus Documentation](https://docs.prompteus.com)
 - [Prompteus Sandbox Documentation](https://docs.prompteus.com/features/sandbox)
