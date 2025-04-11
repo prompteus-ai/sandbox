@@ -18,6 +18,7 @@ function SandboxContent() {
   const [neuronPath, setNeuronPath] = useState("");
   const [bypassCache, setBypassCache] = useState(false);
   const [authToken, setAuthToken] = useState("");
+  const [key, setKey] = useState("");
   const [isExecutionStopped, setIsExecutionStopped] = useState(false);
 
   useEffect(() => {
@@ -49,8 +50,31 @@ function SandboxContent() {
   }, [neuronPath, router, searchParams]);
 
   useEffect(() => {
+    const keyFromUrl = searchParams.get("key");
+
+    if (keyFromUrl) {
+      setKey(decodeURIComponent(keyFromUrl));
+    } else {
+      const savedKey = localStorage.getItem("key");
+
+      if (savedKey) {
+        setKey(savedKey);
+      }
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     localStorage.setItem("authToken", authToken);
   }, [authToken]);
+
+  useEffect(() => {
+    if (key) {
+      localStorage.setItem("key", key);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("key", encodeURIComponent(key));
+      router.push(`?${params.toString()}`);
+    }
+  }, [key, neuronPath, router, searchParams]);
 
   const handleRun = async () => {
     try {
@@ -58,8 +82,8 @@ function SandboxContent() {
       setOutput("");
       const input = document.querySelector("textarea")?.value || "";
 
-      // Split the neuron path into org and neuron slugs
-      const [orgSlug, neuronSlug] = neuronPath.split("/");
+      // Split the neuron path into org and neuron slugs and revisionId
+      const [orgSlug, neuronSlug, revisionId] = neuronPath.split("/");
       if (!orgSlug || !neuronSlug) {
         throw new Error(
           "Invalid neuron path. Use format: organization/neuron-slug"
@@ -75,6 +99,8 @@ function SandboxContent() {
         input,
         bypassCache,
         rawOutput: false,
+        revisionId,
+        key,
       });
 
       setOutput(result.output || "");
@@ -111,7 +137,7 @@ function SandboxContent() {
             <input
               type="text"
               className="font-mono rounded flex-grow ml-2 p-1 focus:outline-none font-bold bg-transparent border border-gray-300 dark:border-gray-600 dark:text-white"
-              placeholder="organization/neuron-slug"
+              placeholder="organization/neuron-slug/revisionId"
               value={neuronPath}
               onChange={(e) => setNeuronPath(e.target.value)}
             />
@@ -127,6 +153,19 @@ function SandboxContent() {
             <p className="text-xs text-gray-600 dark:text-gray-400 ml-2 leading-tight min-w-80">
               Note: Credentials are required for private neurons. <br />
               The sandbox respects all neuron security settings.
+            </p>
+          </div>
+          <div className="flex items-center flex-row h-8 w-full">
+            <input
+              type="password"
+              className="font-mono rounded w-full p-1 focus:outline-none border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
+              placeholder="Key (optional)"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+            />
+            <p className="text-xs text-gray-600 dark:text-gray-400 ml-2 leading-tight min-w-80">
+              Note: Key is required when running a specific neuron revision, to
+              prevent public access to unpublished versions.
             </p>
           </div>
         </div>
